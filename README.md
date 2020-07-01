@@ -1,4 +1,4 @@
-# workshop-plus-admin1
+# workshop-plus-admin
 
 ## Project setup
 ```
