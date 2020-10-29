@@ -1,4 +1,4 @@
-# workshop-plus-admin1
+# v3-element-admin
 
 ## Project setup
 ```
