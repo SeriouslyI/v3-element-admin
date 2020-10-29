@@ -8,6 +8,7 @@ export default new Router({
   routes: [
     {
       path: '/',
+      redirect:'/dashbord',
       name: 'home',
       component: Home,
       children: [
@@ -20,6 +21,11 @@ export default new Router({
           path: '/workshopBannerSetting',
           name: 'workshopBannerSetting',
           component: () => import(/* webpackChunkName: "about" */ './views/WorkshopBannerSetting.vue')
+        },
+        {
+          path: '/dashbord',
+          name: 'dashbord',
+          component: () => import(/* webpackChunkName: "about" */ './views/info/Dashbord.vue')
         }
       ]
     },

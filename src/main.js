@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import './plugins/axios'
 import App from './App.vue'
 import router from './router'
 import store from './store'
@@ -56,10 +57,14 @@ Vue.component(Tag.name, Tag);
 Vue.component(Form.name, Form);
 Vue.component(FormItem.name, FormItem);
 Vue.component(Input.name, Input);
+Vue.component(Dropdown.name, Dropdown);
+Vue.component(DropdownItem.name, DropdownItem);
+Vue.component(DropdownMenu.name, DropdownMenu);
 
 Vue.prototype.$message = Message
 Vue.prototype.$http = axios;
 Vue.config.productionTip = false
+Vue.prototype.global = global;
 
 //路由守卫
 router.beforeEach((to, from, next) => {
@@ -74,21 +79,23 @@ router.beforeEach((to, from, next) => {
   // console.log('守卫')
   if (to.meta.title != undefined) {
     // console.log(to.meta.title);
-    store.commit('sethead_title', to.meta.title)
+    store.commit('settitle', to.meta.title)
   }
-    if (store.state.token) {
-      next()
-    } else {
-      // Message({
-      //   showClose: true,
-      //   message: '请登录使用',
-      //   type: 'error'
-      // });
-      next({
-        path: '/login',
-        query:{redirect:to.fullPath}
-      })
-    }
+
+  if(to.name === 'login') { 
+    next()
+    return  
+  }//中断死循环
+
+  if (store.state.token) {
+    next()
+  } else {
+    console.log(store.state.title)
+    next({
+      path: '/login'
+    })
+  }//没有token就跳转登录页
+  
 })
 
 new Vue({

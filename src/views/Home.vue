@@ -24,10 +24,20 @@
             <el-col :span="6">
               <div class="grid-content">
                 <div class="user-box">
-                  <span class="user-name">楚乔</span><span class="avatar-box"><img
-                      src="http://wx4.sinaimg.cn/thumb150/8f9a6d2ely1ffxo1ifuruj21w01w0b2a.jpg?imageView2/1/w/80/h/80"
-                      alt=""></span><i class="el-icon-caret-bottom"></i></div>
-
+                  <span class="user-name">{{user.u_nickname}}</span><span class="avatar-box"><img
+                      :src="this.global.resources_host+user.avatar"
+                      alt=""></span>
+                  <el-dropdown @command="handleCommand">
+                    <span class="el-dropdown-link">
+                      <i class="el-icon-caret-bottom"></i>
+                    </span>
+                    <el-dropdown-menu slot="dropdown">
+                      <el-dropdown-item command="userInfo">个人信息</el-dropdown-item>
+                      <el-dropdown-item command="editPass">修改密码</el-dropdown-item>
+                      <el-dropdown-item divided command="logout">退出登录</el-dropdown-item>
+                    </el-dropdown-menu>
+                  </el-dropdown>
+                </div>
               </div>
             </el-col>
           </el-row>
@@ -55,11 +65,12 @@
         dynamicTags: [],
         inputVisible: false,
         inputValue: '',
-        aside_height:''
+        aside_height:'',
+        user:{}
       }
     },
     created() {
-      
+      this.user = JSON.parse(window.localStorage.getItem('user'))
     },
     methods: {
       showMenu() {
@@ -79,6 +90,15 @@
           this.dynamicTags.push(data);
         }
         
+      },
+      handleCommand(command){
+        if(command != 'logout'){
+          this.$router.push({
+            path: '/'+command
+          })
+        }else{
+          this.logOut()
+        }
       }
     },
     components: {
@@ -145,5 +165,6 @@
   .tag-box {
     height: 60px;
     line-height: 60px;
+    overflow hidden;
   }
 </style>

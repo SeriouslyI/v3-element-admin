@@ -7,7 +7,7 @@
                 :style="aside_height">
                 <el-menu-item index="1">
                     <i class="el-icon-s-home"></i>
-                    <span slot="title">首页</span>
+                    <span slot="title" @click="go('/')">首页</span>
                 </el-menu-item>
                 <el-submenu :index="String(key+2)" v-for="(val,key) in menu" :key="key">
                     <template slot="title">

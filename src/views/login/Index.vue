@@ -7,7 +7,7 @@
             <el-form-item prop="username">
                 <span class="svg-container"><i class="fa fa-user-circle-o" aria-hidden="true"></i></span>
                 <el-input name="username" type="text" v-model="loginForm.username" autoComplete="off"
-                          placeholder="邮箱"></el-input>
+                          placeholder="用户名"></el-input>
             </el-form-item>
             <el-form-item prop="password">
                 <span class="svg-container"><i class="fa fa-lock" aria-hidden="true"></i></span>
@@ -19,11 +19,7 @@
                     登录
                 </el-button>
             </el-form-item>
-            <div class='tips'>测试帐号为:admin 密码：123456</div>
-            
-            <router-link to="/sendpwd" class="forget-pwd">
-                忘记密码?(或首次登录)
-            </router-link>
+            <!-- <div class='tips'>测试帐号为:admin 密码：123456</div> -->
         </el-form>
        
     </div>
@@ -31,7 +27,7 @@
 
 <script>
     // import { mapGetters } from 'vuex';
-    import { isEmail } from '../../utils/validate.js';
+    // import { isEmail } from '../../utils/validate.js';
     import md5 from 'blueimp-md5';
     import qs from 'qs'
     // import { getQueryObject } from 'utils';
@@ -62,27 +58,27 @@
             callback();
           }
         };
-        const validatePass2 = (rule, value, callback) => {
-          if ( md5('@lss'+value) !== md5('@lss123456') ) {
-                callback(new Error('密码错误！'));
-          } else {
-                callback();
-          }
-        };
 
         return {
             loginForm: {
-                username: 'admin',
+                username: '',
                 password: ''
             },
             loginRules: {
                 username: [
                     // { required: true, trigger: 'blur', validator: validateEmail },
-                    {  trigger: 'blur' , validator: validateAccount}
+                    {
+                        required: true,
+                        message: '请输入用户名',
+                        trigger: 'blur'
+                    }
                 ],
                 password: [
-                    { required: true, trigger: 'blur', validator: validatePass },
-                    {  trigger: 'blur' , validator: validatePass2}
+                    {
+                        required: true,
+                        message: '请输入密码',
+                        trigger: 'blur'
+                    }
                 ]
             },
             loading: false,
@@ -127,13 +123,13 @@
             //     }
             // });
             try {
-              const result = await this.$http.post('http://120.27.250.224:8588/index.php/api/home/login', qs.stringify(this.loginForm)).then((
+              const result = await axios.post(this.global.api_host+'/home/adminLogin', qs.stringify(this.loginForm)).then((
                 response) => {
-                return response
+                return response.data
               }).catch((error) => {
                 console.log(error)
               })
-              console.log(result)
+              
               if (result.code == 0) {
                 this.$store.commit('settoken', result.token)
                 window.localStorage.setItem('token', result.token)
@@ -141,7 +137,7 @@
                 user.uid = result.uid
                 user.u_nickname = result.u_nickname
                 user.u_name = result.u_name
-                user.u_avatar = result.u_avatar
+                user.avatar = result.avatar
                 user.u_logintime = result.u_logintime
                 user.u_type = result.u_type
                 // console.log(user)
@@ -159,7 +155,10 @@
                   });
                 }
               } else {
-                this.msgError(result.message);
+                this.$message({
+                      message: result.message,
+                      type: 'error'
+                    });
               }
               console.log(result.token)
             } catch (err) {
@@ -209,7 +208,7 @@
         background: url('../../assets/imgs/bg_sky.jpg') no-repeat;
         // background-size 100% 100%;
         // background-color #000
-        background-size: cover;
+        background-size: 100% 100%;
         
         input:-webkit-autofill {
             -webkit-box-shadow: 0 0 0px 1000px #293444 inset !important;
